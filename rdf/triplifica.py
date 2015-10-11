@@ -105,6 +105,16 @@ for d in data:
     # forma a id com uri omar + id do pergamon OK
     wid=ID_GEN(ns["omar"].Artwork,d["pergamus_id"])
     # adiciona as outras ids, criando uma classe para cada uma delas
+    if "Autor Principal" in d.keys():
+        G(  wid,
+          ns["omar"].author,
+          L(d["Autor Principal"])
+        )
+    if "Autor do Artigo" in d.keys():
+        G(  wid,
+          ns["omar"].articleAuthor,
+          L(d["Autor do Artigo"])
+        )
     if "Edição" in d.keys():
         G(  wid,
           ns["omar"].edition,
