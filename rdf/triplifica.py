@@ -105,10 +105,36 @@ for d in data:
     # forma a id com uri omar + id do pergamon OK
     wid=ID_GEN(ns["omar"].Artwork,d["pergamus_id"])
     # adiciona as outras ids, criando uma classe para cada uma delas
+    if "Edição" in d.keys():
+        G(  wid,
+          ns["omar"].edition,
+          L(d["Edição"])
+        )
+    if "Notas" in d.keys():
+        G(  wid,
+          ns["omar"].note,
+          L(d["Notas"])
+        )
+    if "Descrição Física" in d.keys():
+        G(  wid,
+          ns["omar"].physicalDescription,
+          L(d["Descrição Física"])
+        )
+
     if "Título Principal" in d.keys():
         G(  wid,
           ns["omar"].title,
           L(d["Título Principal"])
+        )
+    if "Título Anterior" in d.keys():
+        G(  wid,
+          ns["omar"].formerTitle,
+          L(d["Título Anterior"])
+        )
+    if "Título do Artigo" in d.keys():
+        G(  wid,
+          ns["omar"].articleTitle,
+          L(d["Título do Artigo"])
         )
     if "Assuntos" in d.keys():
         assuntos=d["Assuntos"].split(", ")
@@ -123,7 +149,7 @@ for d in data:
         if " / " in isbn_:
             isbn__,isbn1=isbn_.split(" / ")
             isbn2=isbn1.split("ISBN : ")[-1]
-            idsbn=ID_GEN(ns["omar"].ID,isbn1)
+            idsbn=ID_GEN(ns["omar"].ID,isbn1.split(" ")[0])
             G(  wid,
               ns["omar"].id,
               idsbn
@@ -132,7 +158,7 @@ for d in data:
               ns["omar"].value,
               L(isbn1)
             )
-            idsbn=ID_GEN(ns["omar"].ID,isbn2)
+            idsbn=ID_GEN(ns["omar"].ID,isbn2.split(" ")[0])
             G(  wid,
               ns["omar"].id,
               idsbn
@@ -143,7 +169,7 @@ for d in data:
             )
         elif isbncount==1:
             isbn1=isbn_.split(" : ")[-1]
-            idsbn=ID_GEN(ns["omar"].ID,isbn1)
+            idsbn=ID_GEN(ns["omar"].ID,isbn1.split(" ")[0])
             G(  wid,
               ns["omar"].id,
               idsbn
@@ -154,7 +180,7 @@ for d in data:
             )
         elif isbncount==2:
             isbn1,isbn2=isbn_.split("ISBN : ")[1:]
-            idsbn=ID_GEN(ns["omar"].ID,isbn1)
+            idsbn=ID_GEN(ns["omar"].ID,isbn1.split(" ")[0])
             G(  wid,
               ns["omar"].id,
               idsbn
@@ -163,7 +189,7 @@ for d in data:
               ns["omar"].value,
               L(isbn1)
             )
-            idsbn=ID_GEN(ns["omar"].ID,isbn2)
+            idsbn=ID_GEN(ns["omar"].ID,isbn2.split(" ")[0])
             G(  wid,
               ns["omar"].id,
               idsbn
@@ -174,7 +200,7 @@ for d in data:
             )
         elif isbncount==3:
             isbn1,isbn2,isbn3=isbn_.split("ISBN : ")[1:]
-            idsbn=ID_GEN(ns["omar"].ID,isbn1)
+            idsbn=ID_GEN(ns["omar"].ID,isbn1.split(" ")[0])
             G(  wid,
               ns["omar"].id,
               idsbn
@@ -183,7 +209,7 @@ for d in data:
               ns["omar"].value,
               L(isbn1)
             )
-            idsbn=ID_GEN(ns["omar"].ID,isbn2)
+            idsbn=ID_GEN(ns["omar"].ID,isbn2.split(" ")[0])
             G(  wid,
               ns["omar"].id,
               idsbn
@@ -192,7 +218,7 @@ for d in data:
               ns["omar"].value,
               L(isbn2)
             )
-            idsbn=ID_GEN(ns["omar"].ID,isbn3)
+            idsbn=ID_GEN(ns["omar"].ID,isbn3.split(" ")[0])
             G(  wid,
               ns["omar"].id,
               idsbn
@@ -238,4 +264,9 @@ print(len(keys_), "campos", keys_)
 #print(len(tdict['Notas']), 'Notas')
 print("Catalogação Pré MARC", "Só tem barra n!!!!")
 
-
+f=open("omarTriplestore.rdf","wb")
+f.write(g.serialize())
+f.close()
+f=open("omarTriplestore.ttl","wb")
+f.write(g.serialize(format="turtle"))
+f.close()
